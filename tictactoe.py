@@ -16,6 +16,12 @@ class TicTacToe(object):
         self.__corners = [(0,0), (0,2), (2,0), (2,2)]
         self.__sides = [(0,1),(1,2),(2,1), (1,0)]
 
+    """
+    Displays basic instructions to the user
+    in: None
+    output: Instructions to the console
+    returns: None
+    """
     def display_instructions(self):
         print 'Welcome to tic-tac-toe'
         print 'In order to make your mark you must input x,y coordinate'
@@ -34,6 +40,12 @@ class TicTacToe(object):
             if index != 2:
                 print "-" * 10
 
+    """
+    Gets the next game move and updates the board
+    in: None
+    output: None
+    returns: None
+    """
     def get_user_move(self):
         input_isvalid = False
         mark = 'X'
@@ -63,6 +75,7 @@ class TicTacToe(object):
     Determines the next move to be made by the computer
     Algorithm was adapted from the strategy at http://en.wikipedia.org/wiki/Tic_tac_toe
     This use a brute force approach. We could optimize by using the minimax algorithm
+    This algorithm is also simplified by the fact that we always move first ;-)
     in: None
     output: None
     returns: tuple of coordinates for the next move
@@ -91,7 +104,15 @@ class TicTacToe(object):
         if result is not None:
             return result
 
-    
+    """
+    Examines the playing area and determines if the next move will result in
+    a win. This is used to make the next move for the computer to result in
+    a win or to block the opponent
+    in: The mark to use when examining the board (X or O)
+    output: None
+    returns: tuple representing the x,y coordinate or None if three in a row
+             will not result from adding the given mark
+    """
     def __row_has_two(self, mark):
         #look for 2 in row
         for index, row in enumerate(self.__game_board):
