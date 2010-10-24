@@ -1,3 +1,4 @@
+import sys
 class TicTacToe(object):
     """
     Initializes a 3x3 matrix for game play
@@ -10,6 +11,16 @@ class TicTacToe(object):
             ]
         
         self.is_users_play = False
+        self.__X = 'X'
+        self.__O = 'O'
+        self.__corners = [(0,0), (0,2), (2,0), (2,2)]
+        self.__sides = [(0,1),(1,2),(2,1), (1,0)]
+
+    def display_instructions(self):
+        print 'Welcome to tic-tac-toe'
+        print 'In order to make your mark you must input x,y coordinate'
+        print 'values when prompted. Valid values are in the range 0-2.'
+        print 'The computer always gets the first move. Good luck!!'
 
     """
     Displays the current playing area
@@ -19,9 +30,9 @@ class TicTacToe(object):
     """
     def display_game_area(self):
         for index, row in enumerate(self.__game_board):
-            print "%s|%s|%s" % (row[0],row[1],row[2])
+            print "%s | %s | %s" % (row[0],row[1],row[2])
             if index != 2:
-                print "-" * 6
+                print "-" * 10
 
     def get_user_move(self):
         input_isvalid = False
@@ -30,10 +41,11 @@ class TicTacToe(object):
             mark = 'O'
             self.is_users_play = False
         else:
-            #get computer move
+            result = self.__get_computer_move()
             self.is_users_play = True
-            mark = 'X'
-
+            self.__game_board[result[0]][result[1]] = self.__X
+            return
+        
         while not(input_isvalid):
             print "Enter input in the format x,y"
             input = raw_input("--> ")
@@ -46,9 +58,100 @@ class TicTacToe(object):
             if not(input_isvalid):
                 print "Invalid coordinates!"
 
+
+    """
+    Determines the next move to be made by the computer
+    Algorithm was adapted from the strategy at http://en.wikipedia.org/wiki/Tic_tac_toe
+    This use a brute force approach. We could optimize by using the minimax algorithm
+    in: None
+    output: None
+    returns: tuple of coordinates for the next move
+    """
+    def __get_computer_move(self):
+        #1 if we have 2 in a row anywhere play for the win
+        result = self.__row_has_two(self.__X)
+        if result is not None:
+            return result
+        #2 attempt to block player
+        result = self.__row_has_two(self.__O)
+        if result is not None:
+            return result
+
+        #3 move in the center
+        if self.__game_board[1][1] == ' ':
+            return (1,1)
+
+
+        #4 play a corner
+        result = self.__get_empty_corner()
+        if result is not None:
+            return result
+        #5 play in center of row or column
+        result = self.__get_empty_side()
+        if result is not None:
+            return result
+
+    
+    def __row_has_two(self, mark):
+        #look for 2 in row
+        for index, row in enumerate(self.__game_board):
+            if row.count(mark) == 2 and ' ' in row:
+                return (index, row.index(' '))
+
+        #look for 2 in columns
+        rotated_board = zip(*self.__game_board)
+        for index, row in enumerate(rotated_board):
+            if row.count(mark) == 2 and ' ' in row:
+                return (row.index(' '), index)
+
+        #check diagonals
+        diagonals = []
+        diagonals.append([self.__game_board[0][0], self.__game_board[1][1], self.__game_board[2][2]])
+        diagonals.append([self.__game_board[0][2], self.__game_board[1][1], self.__game_board[2][0]])
+
+        if diagonals[0].count(mark) == 2 and ' ' in diagonals[0]:
+            index = diagonals[0].index(' ')
+            return (index, index)
+        elif diagonals[1].count(mark) == 2 and ' ' in diagonals[1]:
+            index = diagonals[1].index(' ')
+            if index == 0:
+                return (index, 2)
+            elif index == 1:
+                return (1,1)
+            else:
+                return (index, 0)
+
+        return None
+
     
     """
-    Determines if the give coordinates maps to an empty slot
+    Gets the first empty corner coordinates
+    in: None
+    output: None
+    returns: coordinate tuple of empty corner or None if all corners are occupied
+    """
+    def __get_empty_corner(self):
+        for corner in self.__corners:
+            if self.__is_empty_area(corner):
+                return corner
+            
+        return None
+
+    """
+    Gets the first empty side coordinates
+    in: None
+    output: None
+    returns: coordinate tuple of empty side or None if all sides are occupied
+    """
+    def __get_empty_side(self):
+        for side in self.__sides:
+            if self.__is_empty_area(side):
+                return side
+            
+        return None
+    
+    """
+    Determines if the given coordinates maps to an empty slot
     in: list of coordinates ['x','y'] where x and y are both integer strings
     output: None
     returns: True if the coordinates are empty
@@ -100,16 +203,23 @@ class TicTacToe(object):
         return (False, None)
         
 if __name__ == "__main__":
+
     game = TicTacToe()    
+    game.display_instructions()
     game_over = False
     result = ()
-    while not(game_over):
-        game.get_user_move()
-        result = game.is_game_over()
-        game_over = result[0]
-        game.display_game_area()
+    try:
+        while not(game_over):
+            game.get_user_move()
+            result = game.is_game_over()
+            game_over = result[0]
+            game.display_game_area()
+            print ' '
+    except(KeyboardInterrupt, SystemExit):
+        print "\nThanks for playing"
+        sys.exit(0)
         
     if result[1] in 'XO':
         print "%s wins!" % result[1]
     else:
-        print "tie"
+        print "Tie Game!"
