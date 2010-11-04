@@ -1,0 +1,25 @@
+<html>
+<head>
+	<title>Tic Tac DOMINATE</title>
+</head>
+<body>
+	<h1>You cannot beat me, Hal</h1>
+	<p>{{message}}</p>
+	<div>
+	<form name="main" action="/tictactoe/processmove/" method="POST">
+		{% csrf_token %}
+	<table border='2'></tr>{% for space in spaces %}
+			<td width=75px height=75px align=center valign=center>
+			{% if 'empty' in space %}
+			<input type="checkbox" name="button{{ forloop.counter }}" value="Take"/>
+			{% endif %}
+			{% if 'X' in space %} <h1>X</h1> {% endif %}
+			{% if 'O' in space %} <h1>O</h1> {% endif %}
+			{% if 'NULL' in space %} <h1>-</h1> {% endif %}
+			</td>
+			{% if forloop.counter|divisibleby:"3" %}
+			</tr><tr>
+			{% endif %}
+			{% endfor %}
+			<input type="submit" value="Play!" />
+	</tr></table></form></div>
