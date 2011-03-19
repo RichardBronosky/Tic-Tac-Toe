@@ -1,7 +1,1 @@
-Intructions:
-1. Fork this repo on github.
-2. Create an app that can interactively play the game of Tic Tac Toe against another player and never lose.
-3. Commit early and often, with good messages.
-4. Push your code back to github and send me a pull request.
-
-(Don't be offended when I don't actually pull. I will clone your repo and inspect it locally when I receive the request. This repo will be left solution-less for obvious reasons.)
+The Tic-Tac-Toe coding challenge has been moved to https://github.com/coxmediagroup/Tic-Tac-Toe
