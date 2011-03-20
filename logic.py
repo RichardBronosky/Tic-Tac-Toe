@@ -5,8 +5,13 @@ import itertools
 def move_player(player_attr):
     def set_any(self, value):
         try:
-            del self.board[[k for k, v in self.board.iteritems() if v == value][0]]
-            setattr(self, player_attr, getattr(self, player_attr)+[value])
+            attr = getattr(self, player_attr)
+            for k, v in self.board.iteritems():
+                if v == value:
+                    break
+            del self.board[k]
+            attr.update({k:v})
+            setattr(self, player_attr, attr)
         except ValueError: raise ValueError, "That position is not available on the board."
     return set_any
 
@@ -29,21 +34,21 @@ class magic_square(object):
         self.board,self._player1, self._player2 = dict(zip(range(1,10),
                                                              [8, 1, 6,
                                                               3, 5, 7,
-                                                              4, 9, 2])), [], []
+                                                              4, 9, 2])), {}, {}
 
     def get_win(self, combo, available):
-        return [move for move in available if sum(combo, move) ==15 ]
+        return [move for move in available if sum(combo, move) == 15]
 
     def _best_move(self, combo, available):
         return self.get_win(combo, available) + [combo]
 
     def best_move(self, taken_moves):
         if len(taken_moves) > 1:
-            for taken_combo in itertools.combinations(taken_moves, 2):
+            for taken_combo in itertools.combinations(taken_moves.values(), 2):
                 move = self._best_move(taken_combo, self.board.values())[0]
         if not 'move' in locals():
             for available_combo in itertools.combinations(self.board.values(), 2):
-                test = self._best_move(available_combo, taken_moves)
+                test = self._best_move(available_combo, taken_moves.values())
                 if len(test) > 1: return test[1]
         return move
 
@@ -55,8 +60,11 @@ if __name__ == '__main__':
     print 'board 1: ', game.board
     print 'player 1: ', game.player1
     print 'player 2: ', game.player2
-    print game.best_move(game.player1)
-    print game.best_move(game.player2)
+    print 'best_move 1: ', game.best_move(game.player1)
+    print 'best_move 2: ', game.best_move(game.player2)
+    game.player1 = 4
+    print 'player 1: ', game.player1
+    print 'best_move 1: ', game.best_move(game.player1)
 
 
 """
