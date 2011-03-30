@@ -4,11 +4,12 @@ import collections, itertools, random, logging
 
 class player(object):
 
-    def __init__(self, game, move_picker, char='X'):
-        self.moves, self.game, self.move_picker, self.char = [], game, move_picker, char
+    def __init__(self, game, char='X', move_picker=None):
+        self.moves, self.game, self.char, self.move_picker = [], game, char, move_picker
 
     def move(self, move):
-        self.moves += [self.game.take(move)]
+        del self.game.board[self.game.board.index(move)]
+        self.moves += [move]
         if len(self.moves) >= 3 and [self.game.get_win(combo) for combo in itertools.combinations(self.moves, 3)][0]:
             self.game.winner = self
 
@@ -23,19 +24,12 @@ class magic_square(object):
     indexed by their tic-tac-toe position is just the UI most people expect.
     """
 
-    fresh_board = [8, 1, 6,
-                   3, 5, 7,
-                   4, 9, 2]
+    layout = [8, 1, 6,
+              3, 5, 7,
+              4, 9, 2]
 
     def __init__(self):
-        self.winner, self.board = None, self.fresh_board[:]
-
-    def take(self, move):
-        try:
-            del self.board[self.board.index(move)]
-        except ValueError:
-            raise ValueError, ("Position %s is not available on the board." % move)
-        return move
+        self.winner, self.board = None, self.layout[:]
 
     def get_win(self, combo, available=[0]):
         return [move for move in available if sum(combo, move) == 15]
@@ -43,10 +37,10 @@ class magic_square(object):
     def best_moves(self, taken_moves, opponent_moves=[], moves=[]):
         for tactic in (taken_moves, opponent_moves):
             # 1st tactic, go for the win. 2nd tactic, block your opponent.
-            if len(tactic) > 1:
+            if len(tactic) >= 2:
                 for combo in itertools.combinations(tactic, 2):
                     moves = moves + self.get_win(combo, self.board)
-        if len(self.board) > 1:
+        if len(self.board) >= 2:
             # 3rd look for opponent combo intersections that would position them to win 2 ways
             crafty = [available_combo for available_combo in itertools.combinations(self.board, 2) if self.get_win(available_combo, opponent_moves)]
             if len(crafty) == 2:
@@ -59,7 +53,7 @@ class magic_square(object):
             moves = moves + [random.choice(self.board)]
         else:
             raise IndexError, 'game over'
-        return moves or list(set([5]) & set(self.board)) or [random.choice(list(set([5,8,6,4,2]) & set(self.board)) or self.board)]
+        return moves or list(set([5]) & set(self.board)) or [random.choice(list(set([8,6,4,2]) & set(self.board)) or self.board)]
 
 if __name__ == '__main__':
     """
@@ -70,7 +64,7 @@ if __name__ == '__main__':
     #logging.getLogger().setLevel(logging.INFO)
 
     def board(players):
-        board = magic_square.fresh_board[:]
+        board = magic_square.layout[:]
         for k in range(0,len(board)):
             for player in players:
                 if board[k] in player.moves:
@@ -84,7 +78,7 @@ if __name__ == '__main__':
     def play(move_picker0, move_picker1):
             game = magic_square()
             winner = game.winner
-            players = [player(game, eval(move_picker0), 'X'), player(game, eval(move_picker1), 'O')]
+            players = [player(game, 'X', eval(move_picker0)), player(game, 'O', eval(move_picker1))]
             player_queue = collections.deque(players)
             while len(game.board) and not game.winner:
                 move = player_queue[0].move_picker(player_queue[0].moves, player_queue[1].moves) 
@@ -97,23 +91,18 @@ if __name__ == '__main__':
             logging.info('winner: %s' % winner)
             return winner
 
-    print "\nplay('game.best_moves', 'game.best_moves')"
-    test = collections.defaultdict(int)
-    for match in range(1000):
-        test[play('game.best_moves', 'game.best_moves')] += 1
-    print dict(test)
-    print "\nplay('random_factory(game)', 'random_factory(game)')"
-    test = collections.defaultdict(int)
-    for match in range(1000):
-        test[play('random_factory(game)', 'random_factory(game)')] += 1
-    print dict(test)
-    print "\nplay('game.best_moves', 'random_factory(game)')"
-    test = collections.defaultdict(int)
-    for match in range(1000):
-        test[play('game.best_moves', 'random_factory(game)')] += 1
-    print dict(test)
-    print "\nplay('random_factory(game)', 'game.best_moves')"
-    test = collections.defaultdict(int)
-    for match in range(1000):
-        test[play('random_factory(game)', 'game.best_moves')] += 1
-    print dict(test)
+    test_count = 1000
+    tests = (('game.best_moves', 'game.best_moves'),            # should be 100% ties
+             ('random_factory(game)', 'random_factory(game)'),  # should be 80-83% ties
+             ('game.best_moves', 'random_factory(game)'),       # should be 15-19% ties
+             ('random_factory(game)', 'game.best_moves'))       # should be 20-24% ties (of course, game.best_moves should never lose.)
+
+    for test in tests:
+        counter = collections.defaultdict(int)
+        for match in range(test_count):
+            counter[str(play(*test))] += 1
+        d=dict(counter)
+        for k in ('None', 'X', 'O'):
+            d.setdefault(k, 0)
+            d.setdefault('p%s' % k, ('(%i%%)' % round(100*d[k]/test_count)))
+        print '{0:20}  vs.  {1:20}    X:{X:5} {pX:>6}    O:{O:5} {pO:>6}    None:{None:5} {pNone:>6}'.format(*test, **d)
