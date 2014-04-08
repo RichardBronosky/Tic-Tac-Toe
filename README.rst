@@ -6,9 +6,9 @@ As a CMG manager, I want to see how you code a game of Tic Tac Toe, so that I ca
 Acceptance criteria
 =======================
 
-* The AI should never lose to a human
 * The submission must include both server & client side code -- no CLI-only or browser-only implementations
 * Quality counts! Take your time on your submission; There is technically no time limit! A good submission that takes a while will be better than a poor submission that took 1 day.
+* The AI should never lose
 
 
 Technical notes
