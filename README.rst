@@ -9,6 +9,7 @@ Acceptance criteria
 * The AI should never lose
 * The submission must include both server & client side code -- no CLI-only or browser-only implementations. Play to your strengths, but show us your full range of skills.
 * Quality counts! A good submission that takes a while is better than a poor submission quickly.
+* You should include clear instructions for how to run your application
 
 
 Technical notes
