@@ -1,7 +1,7 @@
 Story
 ======
 
-As a CMG manager, I want to play a game of Tic Tac Toe against an AI, so that I can get a feel for a candidate's skills and strenghts.
+As a CMG manager, I want to see how you code a game of Tic Tac Toe, so that I can get a feel for a candidate's skills and strengths.
 
 Acceptance criteria
 =======================
