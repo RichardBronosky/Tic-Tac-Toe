@@ -24,5 +24,5 @@ Submissions
 ---------------
 
 1. Publically: Fork this repo and send us a pull request.
-2. Privately: If you don't want to broadcast your intentions by forking this, feel free to clone it and work locally. Then, send us a tar.gz of your solution, including your .git folder so we can see your commit history.
+2. Privately: Send us a tar.gz of your solution **including your .git folder** so we can see your commit history.
 
