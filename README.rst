@@ -5,24 +5,23 @@ As a CMG manager, I want to see how you code a game of Tic Tac Toe, so that I ca
 
 Acceptance criteria
 =======================
+* Application is a stand alone, static web page game of tic tac toe.
+* Computer (AI)  will never lose a game.
+* Application should be able to run based on HTML, CSS and Javascript.
+* Game will let player choose to be either X or O, computer will take other choice.
+* Game will let player go first.
 
-* The AI should never lose
-* The submission must include both server & client side code -- no CLI-only or browser-only implementations. Play to your strengths, but show us your full range of skills.
-* Quality counts! A good submission that takes a while is better than a poor submission quickly.
-* You should include clear instructions for how to run your application
-
-
-Technical notes
-------------------
-
-* We are a Django shop, but it is not a requirement that you implement your program as a Django app.
+Submission Tips
+========================
+* Quality counts! A good submission that takes a while is better than a poor submission quickly. 
 * Make sure your submission accurately reflects your development style.
 * Commit early and often, with good messages.
+* Research the AI, there are multiple well known algorithms available, show us your implementation.
+* Plagarism will not be tolerated.
 
 
 Submissions
 ---------------
-
-1. Publicly: Fork this repo and send us a pull request.
-2. Privately: Send us a tar.gz of your solution **including your .git folder** so we can see your commit history.
+* Fork this repo and send us a pull request.
+* if you prefer you can send us a ZIP of your submission, due to email filters, rename the file to *.txt and mention it is a ZIP in your email.
 
