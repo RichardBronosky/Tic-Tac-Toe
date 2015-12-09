@@ -16,6 +16,7 @@ Submission Tips
 * Quality counts! A good submission that takes a while is better than a poor submission quickly. 
 * Make sure your submission accurately reflects your development style.
 * Commit early and often, with good messages.
+* Comments and Unit tests are appreciated but not required, if you know good practice, then show us.
 * Research the AI, there are multiple well known algorithms available, show us your implementation.
 * Plagarism will not be tolerated.
 
