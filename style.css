@@ -1,0 +1,115 @@
+* {
+  box-sizing: border-box;
+}
+
+.square {
+  width: 125px;
+  height: 125px;
+  margin: 5px;
+  display: block;
+  float: left;
+  background-color: lightgreen;
+  font-size: 4em;
+  padding-top: 20px;
+  font-family: 'Varela Round', sans-serif;
+  text-align: center;
+}
+
+#header {
+  font-family: 'Varela Round', sans-serif;
+  font-size: 2em;
+  padding: 10px 10px 50px 34%;
+}
+
+.img {
+  width: 100px;
+  margin-left: 25px;
+  margin-top: 25px;
+}
+
+#gameboard {
+  /*padding: 1% 1% 1% 1%;*/
+  overflow: auto;
+  text-align: center;
+  /*margin-left: 100px;*/
+}
+
+.clear {
+  clear: left;
+} /* this is a clear fix for the game squares */
+
+#winnerdeclaration {
+  font-family: 'Varela Round', sans-serif;
+  font-size: 2em;
+  text-align: center;
+  margin-top: 50px;
+  height: 100px;
+}
+
+.disableclick {
+  pointer-events: none;
+}
+
+.enableclick {
+  pointer-events: all;
+}
+
+#restartGame {
+  /*text-align: center;*/
+  /*margin-left: 35%;*/
+  margin-top: 50px;
+  background-color: orange;
+}
+
+#options {
+  margin-top: 50px;
+  background-color: orange;
+}
+
+.container {
+  margin: 10px -100px 10px -100px;
+}
+
+table {
+  margin-top: 10px;
+}
+
+#face {
+  margin-top: 50%;
+}
+
+@media (max-width: 760px) {
+  .square {
+    display: none;
+  }
+  #restartGame {
+    display: none;
+  }
+  #options {
+    display: none;
+  }
+  table {
+    display: none;
+  }
+  #header {
+    display: none;
+  }
+  #clearScoreboard {
+    display: none;
+  }
+  .option-buttons {
+    display: none;
+  }
+  label {
+    display: none;
+  }
+  #winnerdeclaration {
+    display: none;
+  }
+}
+
+@media (min-width: 761px) {
+  #face {
+    display: none
+  }
+}
