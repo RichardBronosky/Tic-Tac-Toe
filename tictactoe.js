@@ -117,7 +117,28 @@ let cpuMoveDecider = (board, player) => {
             attack_count++;
         }
     }
-    if (attack_count > 0) { //if cpu has a winning move, enter this conditional block
+
+    let board_count = arrayed_board.map(item => { //gets a count of filled spaces on the board
+        count = 0;
+        if (item !== '') {
+            count++;
+        }
+        return count;
+    }).reduce((prev, current) => {
+        return prev + current;
+    });
+
+    if (board_count === 1) {
+        if (arrayed_board[0] !== '') {
+            return 8;
+        } else if (arrayed_board[2] !== '') {
+            return 6;
+        } else if (arrayed_board[6] !== '') {
+            return 2;
+        } else if (arrayed_board[8] !== '') {
+            return 0;
+        }
+    } else if (attack_count > 0) { //if cpu has a winning move, enter this conditional block
         for (i = 0; i < 8; i++) {
             if (win_combos_check_array[i] === -2) {
                 attack_array = win_combos[i]; //goes back through win_combos array to pull out the winning combo
