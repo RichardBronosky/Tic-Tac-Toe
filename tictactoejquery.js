@@ -1,6 +1,5 @@
-//Objects start here
 
-function Gameboard() {
+function Gameboard() { //gameboard class for instantiating a gameboard and supplying to gameplay logic
   this.sq1 = $('#0').text();
   this.sq2 = $('#1').text();
   this.sq3 = $('#2').text();
@@ -12,26 +11,23 @@ function Gameboard() {
   this.sq9 = $('#8').text();
 }
 
-function Player(name, icon) {
+function Player(name, icon) { //player class for instantiating player objects
   this.name = name;
   this.icon = icon;
   this.gamesWon = 0;
   this.gamesLost = 0;
-
 }
 
-//global variables start here
-var winner = false;
-var tries = 0;
-var playerName = "";
-var player1 = new Player("Player 1", "O");
-var player2 = new Player("Player 2", "X");
-var cpuBool = false;
+//globals
+var tries = 0; //for draw check
+var playerName = ""; //for winner declaration message
+var player1 = new Player("Player 1", "O"); //instantiates player 1
+var player2 = new Player("Player 2", "X"); //instantiates player 2
+var cpuBool = false; //toggles to true when cpu v. machine is selected
 
-//non-OOP functions
-
+//winner check function (this could be made more efficient with a loop); returns true if winner detected
 function checkForWinner(player) {
-  var board = new Gameboard();
+  var board = new Gameboard(); //the current state of the board is assigned to var board
     if (player === board.sq1 && player === board.sq2 && player === board.sq3) {
       winner = true;
     } else if (player === board.sq4 && player === board.sq5 && player === board.sq6) {
@@ -48,10 +44,13 @@ function checkForWinner(player) {
       winner = true;
     } else if (player === board.sq3 && player === board.sq5 && player === board.sq7) {
       winner = true;
-    }
+  } else {
+      winner = false;
+  }
   return winner;
 }
 
+//draw check
 function checkForTie(tries, winner) {
   if (tries === 9 && winner === false) {
     $("#winnerdeclaration").text("It's a draw.");
@@ -59,23 +58,14 @@ function checkForTie(tries, winner) {
   }
 }
 
-function getRandomInt(num) {
-  return Math.floor(Math.random() * (num));
-}
-
+//cpu move function
 function cpuMove() {
   var board = new Gameboard();
-  spotsLeft = [];
-  for (var i = 0; i <= 8; i++) {
-    if ($("#" + i).text() === "") {
-      spotsLeft.push("#" + i);
-    }
-  }
-  randomSpot = winComboCheckerFunction(board, player1);
-  let randomSpotString = "#" + randomSpot;
-  $(randomSpotString).text(player2.icon);
-  checkForWinner(player2.icon);
-    if (winner === true) {
+  let cpuSquareSelection = cpuMoveDecider(board, player1);
+  let cpuSquareSelectionString = "#" + cpuSquareSelection;
+  $(cpuSquareSelectionString).text(player2.icon); //icon added to board
+  let winnerCheck = checkForWinner(player2.icon);
+    if (winnerCheck === true) {
       $("#winnerdeclaration").text("Machine wins!");
       player2.gamesWon += 1;
       $('#winsPlayer2').text(player2.gamesWon);
@@ -84,8 +74,9 @@ function cpuMove() {
   tries += 1;
 }
 
-let winComboCheckerFunction = (board, player) => {
-    let win_combos = [[0, 1, 2],
+//AI decision-making function
+let cpuMoveDecider = (board, player) => {
+    let win_combos = [[0, 1, 2], //array of all possible winning combos
                 [3, 4, 5],
                 [6, 7, 8],
                 [0, 3, 6],
@@ -94,53 +85,51 @@ let winComboCheckerFunction = (board, player) => {
                 [0, 4, 8],
                 [2, 4, 6]];
     let arrayed_board = [];
-    let block_count = 0;
-    let attack_count = 0;
-    let block_array = null;
-    let attack_array = null;
-    let open_spaces = [];
-    let win_combos_check_array = [];
-    let block_move_open = null;
-    for (var key in board) {
+    let block_count = 0; //keeps a tally of possible winning moves opponent has
+    let attack_count = 0; //keeps a tally of possible winning moves cpu has
+    let block_array = null; //current opponent winning combination (e.g. [2, 4, 6])
+    let attack_array = null; //current cpu winning combination
+    let open_spaces = []; //array of all open squares on the board
+    let win_combos_check_array = []; //array of scores for each possible scoring combination; index represents each winning combo possibility from win_combos array above. If no gamepiece is placed along a winning combination, the score is zero for that combo; if two gamepieces of the same player are included with the third space open, then the score is a 2.
+    for (var key in board) { //loops through gameboard object and pushes values corresponding to the squares on the gameboard to arrayed_board array.
         arrayed_board.push(board[key]);
     };
     for (i = 0; i < arrayed_board.length; i++) {
         if (arrayed_board[i] === '') {
-            open_spaces.push(i);
+            open_spaces.push(i); //pushes open space indices to open_spaces array
         }
     }
-    win_combos_check_array = win_combos.map(item => {
-        let counter = 0;
+    win_combos_check_array = win_combos.map(item => { //maps over winning combos array and compares each array to the current state of the spaces in that array on the board; scores the array based on the logic below
+        let score = 0;
         for (i = 0; i < 3; i++) {
             if (arrayed_board[item[i]] === player.icon) {
-                counter++;
+                score++;
             } else if (arrayed_board[item[i]] !== player.icon && arrayed_board[item[i]] !== "") {
-                counter--;
+                score--;
             }
         }
-        return counter;
+        return score;
     });
-    for (i = 0; i < win_combos_check_array.length; i++) { //count potential winning combos
+    for (i = 0; i < win_combos_check_array.length; i++) { //count potential winning moves of opponent AND cpu
         if (win_combos_check_array[i] === 2) {
             block_count++;
         } else if (win_combos_check_array[i] === -2) {
             attack_count++;
         }
     }
-    if (attack_count > 0) {
+    if (attack_count > 0) { //if cpu has a winning move, enter this conditional block
         for (i = 0; i < 8; i++) {
             if (win_combos_check_array[i] === -2) {
-                attack_array = win_combos[i];
+                attack_array = win_combos[i]; //goes back through win_combos array to pull out the winning combo
             }
         }
         for (i = 0; i < 3; i++) {
             if (arrayed_board[attack_array[i]] === '') {
-                attack_move_index = i;
+                attack_move_index = i; //loops through winning combo to identify index within array that is empty
             }
         }
-        attack_count = 0;
-        return attack_array[attack_move_index];
-    } else if (block_count >= 1) { //if potential winning combinations number only one, enter this conditional block
+        return attack_array[attack_move_index]; //uses attack_move_index find the actual index of the empty space on the gameboard that leads to a win
+    } else if (block_count >= 1) { //defensive check; if opponent has one or more winning moves and cpu doesn't have one, move into this block
         for (i = 0; i < 8; i++) {
             if (win_combos_check_array[i] === 2) {
                 block_array = win_combos[i];
@@ -148,14 +137,13 @@ let winComboCheckerFunction = (board, player) => {
         }
         for (i = 0; i < 3; i++) {
             if (arrayed_board[block_array[i]] === '') {
-                block_move_index = i;
+                block_move_index = i; //loops through winning combo to identify index within array that is empty
             }
         }
-        block_count = 0;
-        return block_array[block_move_index];
+        return block_array[block_move_index];//uses block_move_index find the actual index of the empty space on the gameboard that leads to a defensive block
     } else {
         block_move_index = open_spaces[Math.floor(Math.random() * (open_spaces.length))];
-        return block_move_index;
+        return block_move_index; //if neither condition above is met, then cpu moves randomly on the board.
     }
 };
 
@@ -165,7 +153,7 @@ $(document).ready(function() {
   $('input:radio').change(
     function(){
         if($(this).val() === 'CPU') {
-            $(".square").text("");
+            $(".square").text(""); //resets board if player has already made a move before restarting a game
             cpuBool = true;
             $("#winnerdeclaration").text("Your move!");
             playerIcon = player1.icon;
@@ -184,7 +172,7 @@ $(document).ready(function() {
         checkForWinner(playerIcon);
         if (playerIcon === 'O') {
           playerName = player1.name;
-          playerWin = player1; //can you refactor this section, but putting these variables below?
+          playerWin = player1;
           playerLose = player2;
           playerIcon = player2.icon;
         } else {
@@ -204,7 +192,7 @@ $(document).ready(function() {
       }
       tries += 1;
       checkForTie(tries, winner);
-      if (tries < 9 && cpuBool === true && winner === false) {//not registering when cpu wins
+      if (tries < 9 && cpuBool === true && winner === false) {
         $("#winnerdeclaration").text("I'm thinking...");
         setTimeout(function() {
           $("#winnerdeclaration").text("Okay, you're move...");
@@ -221,7 +209,7 @@ $('#restartGame').click(function () {
   winner = false;
   $(".square").removeClass("disableclick");
   $('.square').text('');
-  $("#winnerdeclaration").text("New Game Started!").delay(2000);
+  $("#winnerdeclaration").text("New Game Started!");
   playerIcon = player1.icon;
   tries = 0;
 });
