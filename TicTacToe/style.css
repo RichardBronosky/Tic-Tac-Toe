@@ -1,0 +1,85 @@
+.container {
+  text-align: center;
+}
+.headline {
+  font-size: 85px;
+  color: #fff;
+  background: #fff;
+  text-shadow: 1px 1px 4px#000;
+}
+.selection {
+  font-size: 23px;
+}
+.replayButton {
+	background-color:#599bb3;
+	border-radius:30px;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:35px;
+	font-weight:bold;
+	padding:5px 25px;
+	text-decoration:none;
+	text-shadow:4px 2px 0px #3d768a;
+  text-align: center;
+  font-family:Courier New;
+}
+.replayButton:hover {
+	background-color:#408c99;
+}
+.replayButton:active {
+	position:relative;
+	top:1px;
+}
+
+td {
+	border:  10px solid #333;
+	height:  100px;
+	width:  100px;
+	text-align:  center;
+	vertical-align:  middle;
+	font-size:  85px;
+	cursor: pointer;
+}
+
+table {
+	border-collapse: collapse;
+	position: absolute;
+	left: 50%;
+	margin-left: -155px;
+	top: 155px;
+}
+
+table tr:first-child td {
+	border-top: 0;
+}
+
+table tr:last-child td {
+	border-bottom: 0;
+}
+
+table tr td:first-child {
+	border-left: 0;
+}
+
+table tr td:last-child {
+	border-right: 0;
+}
+
+.finished {
+  display: none;
+  width: 200px;
+  top: 242px;
+  background-color: red;
+  opacity: 0.72;
+  position: absolute;
+  left: 50%;
+  margin-left: -100px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  text-align: center;
+  border-radius: 5px;
+  color: white;
+  font-size: 43px;
+}

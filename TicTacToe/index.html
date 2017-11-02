@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Tic Tac Toe</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" href="favicon.ico">
+
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="headline" align="center">Tic-Tac-Toe</div>
+    <div class="selection">Choose your mark: <input type="radio" name="mark" value="cross" class="player"> <i class='fa fa-times' aria-hidden='true'></i>
+    <input type="radio" name="mark" value="nought" checked="checked"> <i class='fa fa-circle-o' aria-hidden='true'></i>
+  </div>
+  </div>
+  <table>
+    <tr>
+      <td class="box" id="0"></td>
+      <td class="box" id="1"></td>
+      <td class="box" id="2"></td>
+    </tr>
+    <tr>
+      <td class="box" id="3"></td>
+      <td class="box" id="4"></td>
+      <td class="box" id="5"></td>
+    </tr>
+    <tr>
+      <td class="box" id="6"></td>
+      <td class="box" id="7"></td>
+      <td class="box" id="8"></td>
+    </tr>
+  </table>
+  <div class="finished">
+    <div class="text"></div>
+  </div>
+  <div style="text-align:center;position: absolute;bottom: 100px;width: 100%;">
+
+  <button onClick="startTTT()" class="replayButton">Replay</button></div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
