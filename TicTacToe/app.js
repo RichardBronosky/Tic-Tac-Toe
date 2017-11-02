@@ -15,6 +15,15 @@ function startTTT() {
 		boxs[i].addEventListener('click', firstMove, false);
 	}
 }
+function symbolSelect(value) {
+	if (value === "Cross") {
+		human = "X";
+		ai = "O";
+	} else {
+		human = "O";
+		ai = "X";
+	}
+}
 
 function firstMove(square) {
 	if (typeof tttBoard[square.target.id] == 'number') {
